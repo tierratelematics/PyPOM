@@ -95,3 +95,35 @@ class Region(WebView):
 
         """
         return self
+
+    def find_element(self, strategy, locator):
+        """Finds an element on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
+        :rtype: selenium.webdriver.remote.webelement.WebElement
+
+        """
+        root = self.root
+        if root is not None:
+            return root.find_element(strategy, locator)
+        return super(Region, self).find_element(strategy, locator)
+
+    def find_elements(self, strategy, locator):
+        """Finds elements on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target elements.
+        :type strategy: str
+        :type locator: str
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
+        :rtype: list
+
+        """
+        root = self.root
+        if root is not None:
+            return root.find_elements(strategy, locator)
+        return super(Region, self).find_elements(strategy, locator)

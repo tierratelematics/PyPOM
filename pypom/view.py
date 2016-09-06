@@ -24,11 +24,6 @@ class WebView(object):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
-        from pypom import Region
-        if isinstance(self, Region):
-            root = self.root
-            if root is not None:
-                return root.find_element(strategy, locator)
         return self.selenium.find_element(strategy, locator)
 
     def find_elements(self, strategy, locator):
@@ -42,11 +37,6 @@ class WebView(object):
         :rtype: list
 
         """
-        from pypom import Region
-        if isinstance(self, Region):
-            root = self.root
-            if root is not None:
-                return root.find_elements(strategy, locator)
         return self.selenium.find_elements(strategy, locator)
 
     def is_element_present(self, strategy, locator):
