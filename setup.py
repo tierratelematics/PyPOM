@@ -1,5 +1,7 @@
 from setuptools import setup
 
+selenium_requires = ['selenium']
+
 setup(name='PyPOM',
       version='1.0',
       description='python page object model for selenium',
@@ -8,10 +10,12 @@ setup(name='PyPOM',
       author_email='dhunt@mozilla.com',
       url='https://github.com/mozilla/PyPOM',
       packages=['pypom'],
-      install_requires=['selenium',
-                        'zope.interface',
+      install_requires=['zope.interface',
                         'zope.component',
                         ],
+      extras_require={
+          'selenium': selenium_requires,
+      },
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',
       classifiers=[
