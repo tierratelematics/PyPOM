@@ -1,5 +1,5 @@
-from .driver import (
+from .driver import (  # noqa
     ISelenium,
     ISplinter,
     IDriver,
-    )
+)
