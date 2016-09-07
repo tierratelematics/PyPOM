@@ -50,7 +50,7 @@ class WebView(object):
         :rtype: bool
 
         """
-        return self.driver_adapter.find_element(strategy, locator)
+        return self.driver_adapter.is_element_present(strategy, locator)
 
     def is_element_displayed(self, strategy, locator):
         """Checks whether an element is displayed.
@@ -63,4 +63,4 @@ class WebView(object):
         :rtype: bool
 
         """
-        return self.driver_adapter.find_element(strategy, locator).is_displayed()
+        return self.driver_adapter.is_element_displayed(strategy, locator)
