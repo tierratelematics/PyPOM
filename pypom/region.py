@@ -44,7 +44,7 @@ class Region(WebView):
     _root_locator = None
 
     def __init__(self, page, root=None):
-        super(Region, self).__init__(page.selenium, page.timeout)
+        super(Region, self).__init__(page.driver, page.timeout)
         self._root = root
         self.page = page
         self.wait_for_region_to_load()

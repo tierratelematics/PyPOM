@@ -56,8 +56,8 @@ class Page(WebView):
 
     """
 
-    def __init__(self, selenium, base_url=None, timeout=10, **url_kwargs):
-        super(Page, self).__init__(selenium, timeout)
+    def __init__(self, driver, base_url=None, timeout=10, **url_kwargs):
+        super(Page, self).__init__(driver, timeout)
         self.base_url = base_url
         self.url_kwargs = url_kwargs
 
@@ -89,7 +89,7 @@ class Page(WebView):
 
         """
         if self.seed_url:
-            self.selenium.get(self.seed_url)
+            self.driver_adapter.open(self.seed_url)
             self.wait_for_page_to_load()
             return self
         raise UsageError('Set a base URL or URL_TEMPLATE to open this page.')

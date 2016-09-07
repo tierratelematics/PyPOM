@@ -2,25 +2,43 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from zope.interface import Interface
+
+from zope.interface import (
+    implementer,
+    Interface,
+)
+
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver import (
+    Remote,
+    Opera,
+)
+
+from .interfaces import IDriver
+from .driver import registerDriver
 
 
-class ISplinter(Interface):
-    """ Marker interface for Splinter"""
+class ISelenium(Interface):
+    """ Marker interface for Selenium"""
 
 
-class IDriver(Interface):
-    """ Driver interface """
+@implementer(IDriver)
+class Selenium(object):
 
-    def wait_factory(timeout):
-        """Returns a WebDriverWait like property for a given timeout"""
+    def __init__(self, driver):
+        self.driver = driver
 
-    def open(url):
+    def wait_factory(self, timeout):
+        return WebDriverWait(self.driver, timeout)
+
+    def open(self, url):
         """Open the page.
         Navigates to :py:attr:`url`
         """
+        self.driver.get(url)
 
-    def find_element(strategy, locator):
+    def find_element(self, strategy, locator):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -31,8 +49,9 @@ class IDriver(Interface):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
+        return self.driver.find_element(strategy, locator)
 
-    def find_elements(strategy, locator):
+    def find_elements(self, strategy, locator):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -43,8 +62,9 @@ class IDriver(Interface):
         :rtype: list
 
         """
+        return self.driver.find_elements(strategy, locator)
 
-    def is_element_present(strategy, locator):
+    def is_element_present(self, strategy, locator):
         """Checks whether an element is present.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -55,8 +75,12 @@ class IDriver(Interface):
         :rtype: bool
 
         """
+        try:
+            return self.find_element(strategy, locator)
+        except NoSuchElementException:
+            return False
 
-    def is_element_displayed(strategy, locator):
+    def is_element_displayed(self, strategy, locator):
         """Checks whether an element is displayed.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -67,3 +91,18 @@ class IDriver(Interface):
         :rtype: bool
 
         """
+        try:
+            return self.find_element(strategy, locator).is_displayed()
+        except NoSuchElementException:
+            return False
+
+
+def register():
+    """ Register driver implementation"""
+    registerDriver(
+        ISelenium,
+        Selenium,
+        class_implements=[
+            Remote,
+            Opera,
+        ])

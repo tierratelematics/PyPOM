@@ -4,6 +4,8 @@
 
 from mock import Mock
 import pytest
+from pypom.selenium_driver import ISelenium
+from zope.interface import alsoProvides
 
 
 @pytest.fixture
@@ -26,4 +28,6 @@ def page(selenium, base_url):
 
 @pytest.fixture
 def selenium():
-    return Mock()
+    mock = Mock()
+    alsoProvides(mock, ISelenium)
+    return mock
