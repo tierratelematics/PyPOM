@@ -21,7 +21,7 @@ class IDriver(Interface):
 
     wait = Attribute("""A WebDriverWait like property""")
 
-    def open(self):
+    def open():
         """Open the page.
         Navigates to :py:attr:`seed_url` and calls :py:func:`wait_for_page_to_load`.
         :return: The current page object.
