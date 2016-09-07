@@ -2,7 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from selenium.common.exceptions import NoSuchElementException
 from .interfaces import IDriver
 
 
@@ -51,10 +50,7 @@ class WebView(object):
         :rtype: bool
 
         """
-        try:
-            return self.find_element(strategy, locator)
-        except NoSuchElementException:
-            return False
+        return self.driver_adapter.find_element(strategy, locator)
 
     def is_element_displayed(self, strategy, locator):
         """Checks whether an element is displayed.
@@ -67,7 +63,4 @@ class WebView(object):
         :rtype: bool
 
         """
-        try:
-            return self.find_element(strategy, locator).is_displayed()
-        except NoSuchElementException:
-            return False
+        return self.driver_adapter.find_element(strategy, locator).is_displayed()
