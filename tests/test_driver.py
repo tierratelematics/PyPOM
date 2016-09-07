@@ -74,3 +74,29 @@ def test_multiple_register_driver():
     # same instance of adapted_driver
     assert isinstance(adapted_driver, FakeDriver)
     assert isinstance(adapted_driver2, FakeDriver2)
+
+
+def test_register_driver_class_implements():
+    """ We are testing the registerDriver hook with
+        class implements"""
+    from zope.interface import Interface
+    from pypom.driver import registerDriver
+    from pypom.interfaces import IDriver
+
+    class IFakeDriver(Interface):
+        """ A fake marker interface"""
+
+    class FakeDriver:
+        """ A fake driver """
+        def __init__(self, driver):
+            self.driver = driver
+
+    fake_driver = FakeDriver(None)
+
+    registerDriver(IFakeDriver, FakeDriver, [FakeDriver])
+
+    # driver implementation available after registerDriver
+    adapted_driver = IDriver(fake_driver)
+
+    # same instance of adapted_driver
+    assert isinstance(adapted_driver, FakeDriver)
