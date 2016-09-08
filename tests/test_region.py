@@ -169,7 +169,21 @@ class TestRootLocator:
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_displayed_not_present(self, element, region, selenium):
+    def test_is_element_displayed_not_present_selenium(self, element, region, selenium, driver_interface):
+        if 'Selenium' not in driver_interface.__identifier__:
+            # selenium specific
+            pytest.skip()
+        locator = (str(random.random()), str(random.random()))
+        from selenium.common.exceptions import NoSuchElementException
+        element.find_element.side_effect = NoSuchElementException()
+        assert not region.is_element_displayed(*locator)
+        element.find_element.assert_called_once_with(*locator)
+        element.find_element.is_displayed.assert_not_called()
+
+    def test_is_element_displayed_not_present_splinter(self, element, region, selenium, driver_interface):
+        if 'Splinter' not in driver_interface.__identifier__:
+            # splinter specific
+            pytest.skip()
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
         element.find_element.side_effect = NoSuchElementException()

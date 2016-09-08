@@ -28,7 +28,12 @@ def page(selenium, base_url):
 
 
 @pytest.fixture(params=[ISelenium, ISplinter])
-def selenium(request):
+def driver_interface(request):
+    return request.param
+
+
+@pytest.fixture
+def selenium(request, driver_interface):
     mock = Mock()
-    alsoProvides(mock, request.param)
+    alsoProvides(mock, driver_interface)
     return mock
