@@ -16,17 +16,6 @@ from .interfaces import IDriver
 from .driver import registerDriver
 
 
-STRATEGY_MAPPING = [
-    'name',
-    'id',
-    'css',
-    'xpath',
-    'text',
-    'value',
-    'tag',
-]
-
-
 class ISplinter(Interface):
     """ Marker interface for Splinter"""
 
