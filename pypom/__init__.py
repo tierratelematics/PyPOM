@@ -6,5 +6,13 @@ try:
 except ImportError:
     pass
 else:
-    from .selenium_driver import register
-    register()
+    from .selenium_driver import register as registerSelenium
+    registerSelenium()
+
+try:
+    import splinter  # noqa
+except ImportError:
+    pass
+else:
+    from .splinter_driver import register as registerSplinter
+    registerSplinter()

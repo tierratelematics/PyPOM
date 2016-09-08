@@ -1,6 +1,6 @@
 from setuptools import setup
 
-selenium_requires = ['selenium']
+splinter_requires = ['splinter']
 
 setup(name='PyPOM',
       version='1.0',
@@ -12,9 +12,10 @@ setup(name='PyPOM',
       packages=['pypom'],
       install_requires=['zope.interface',
                         'zope.component',
+                        'selenium',
                         ],
       extras_require={
-          'selenium': selenium_requires,
+          'splinter': splinter_requires,
       },
       license='Mozilla Public License 2.0 (MPL 2.0)',
       keywords='pypom page object model selenium',

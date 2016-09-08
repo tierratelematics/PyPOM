@@ -5,6 +5,7 @@
 from mock import Mock
 import pytest
 from pypom.selenium_driver import ISelenium
+from pypom.splinter_driver import ISplinter
 from zope.interface import alsoProvides
 
 
@@ -26,8 +27,8 @@ def page(selenium, base_url):
     return Page(selenium, base_url)
 
 
-@pytest.fixture
-def selenium():
+@pytest.fixture(params=[ISelenium, ISplinter])
+def selenium(request):
     mock = Mock()
-    alsoProvides(mock, ISelenium)
+    alsoProvides(mock, request.param)
     return mock
