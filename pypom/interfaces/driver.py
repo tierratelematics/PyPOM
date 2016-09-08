@@ -20,7 +20,7 @@ class IDriver(Interface):
         Navigates to :py:attr:`url`
         """
 
-    def find_element(strategy, locator):
+    def find_element(strategy, locator, root=None):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -32,7 +32,7 @@ class IDriver(Interface):
 
         """
 
-    def find_elements(strategy, locator):
+    def find_elements(strategy, locator, root=None):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -44,7 +44,7 @@ class IDriver(Interface):
 
         """
 
-    def is_element_present(strategy, locator):
+    def is_element_present(strategy, locator, root=None):
         """Checks whether an element is present.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -56,7 +56,7 @@ class IDriver(Interface):
 
         """
 
-    def is_element_displayed(strategy, locator):
+    def is_element_displayed(strategy, locator, root=None):
         """Checks whether an element is displayed.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.

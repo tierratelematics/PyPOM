@@ -38,7 +38,7 @@ class Selenium(object):
         """
         self.driver.get(url)
 
-    def find_element(self, strategy, locator):
+    def find_element(self, strategy, locator, root=None):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -49,9 +49,11 @@ class Selenium(object):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
+        if root is not None:
+            return root.find_element(strategy, locator)
         return self.driver.find_element(strategy, locator)
 
-    def find_elements(self, strategy, locator):
+    def find_elements(self, strategy, locator, root=None):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -62,9 +64,11 @@ class Selenium(object):
         :rtype: list
 
         """
+        if root is not None:
+            return root.find_elements(strategy, locator)
         return self.driver.find_elements(strategy, locator)
 
-    def is_element_present(self, strategy, locator):
+    def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -76,11 +80,11 @@ class Selenium(object):
 
         """
         try:
-            return self.find_element(strategy, locator)
+            return self.find_element(strategy, locator, root=root)
         except NoSuchElementException:
             return False
 
-    def is_element_displayed(self, strategy, locator):
+    def is_element_displayed(self, strategy, locator, root=None):
         """Checks whether an element is displayed.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -92,7 +96,7 @@ class Selenium(object):
 
         """
         try:
-            return self.find_element(strategy, locator).is_displayed()
+            return self.find_element(strategy, locator, root=root).is_displayed()
         except NoSuchElementException:
             return False
 

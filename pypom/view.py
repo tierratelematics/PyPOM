@@ -13,7 +13,7 @@ class WebView(object):
         self.timeout = timeout
         self.wait = self.driver_adapter.wait_factory(self.timeout)
 
-    def find_element(self, strategy, locator):
+    def find_element(self, strategy, locator, root=None):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -24,9 +24,11 @@ class WebView(object):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
+        if root is not None:
+            return root.find_element(strategy, locator)
         return self.driver_adapter.find_element(strategy, locator)
 
-    def find_elements(self, strategy, locator):
+    def find_elements(self, strategy, locator, root=None):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -37,9 +39,11 @@ class WebView(object):
         :rtype: list
 
         """
+        if root is not None:
+            return root.find_elements(strategy, locator)
         return self.driver_adapter.find_elements(strategy, locator)
 
-    def is_element_present(self, strategy, locator):
+    def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -50,9 +54,11 @@ class WebView(object):
         :rtype: bool
 
         """
+        if root is not None:
+            return root.is_element_present(strategy, locator)
         return self.driver_adapter.is_element_present(strategy, locator)
 
-    def is_element_displayed(self, strategy, locator):
+    def is_element_displayed(self, strategy, locator, root=None):
         """Checks whether an element is displayed.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -63,4 +69,6 @@ class WebView(object):
         :rtype: bool
 
         """
+        if root is not None:
+            return root.is_element_displayed(strategy, locator)
         return self.driver_adapter.is_element_displayed(strategy, locator)
