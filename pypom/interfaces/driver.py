@@ -13,7 +13,11 @@ class IDriver(Interface):
     """ Driver interface """
 
     def wait_factory(timeout):
-        """Returns a WebDriverWait like property for a given timeout"""
+        """Returns a WebDriverWait like property for a given timeout.
+
+        :param timeout: Timeout used by WebDriverWait like calls
+        :type timeout: int
+        """
 
     def open(url):
         """Open the page.
@@ -25,8 +29,10 @@ class IDriver(Interface):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
@@ -37,8 +43,10 @@ class IDriver(Interface):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target elements.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
         :rtype: list
 
@@ -49,8 +57,10 @@ class IDriver(Interface):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
 
@@ -61,8 +71,10 @@ class IDriver(Interface):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
 

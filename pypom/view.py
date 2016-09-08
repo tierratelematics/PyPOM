@@ -18,9 +18,11 @@ class WebView(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
@@ -31,9 +33,11 @@ class WebView(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target elements.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` like objects.
         :rtype: list
 
         """
@@ -44,8 +48,10 @@ class WebView(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
 
@@ -57,8 +63,10 @@ class WebView(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
 

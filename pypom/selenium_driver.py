@@ -30,6 +30,11 @@ class Selenium(object):
         self.driver = driver
 
     def wait_factory(self, timeout):
+        """Returns a WebDriverWait like property for a given timeout.
+
+        :param timeout: Timeout used by WebDriverWait like calls
+        :type timeout: int
+        """
         return WebDriverWait(self.driver, timeout)
 
     def open(self, url):
@@ -43,8 +48,10 @@ class Selenium(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
@@ -58,8 +65,10 @@ class Selenium(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target elements.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
         :rtype: list
 
@@ -73,8 +82,10 @@ class Selenium(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
 
@@ -89,8 +100,10 @@ class Selenium(object):
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
+        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
+        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
 
@@ -102,7 +115,11 @@ class Selenium(object):
 
 
 def register():
-    """ Register driver implementation"""
+    """ Register the Selenium specific driver implementation.
+
+        This register call is performed by the init module if
+        selenium is available.
+    """
     registerDriver(
         ISelenium,
         Selenium,
