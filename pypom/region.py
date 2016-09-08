@@ -13,7 +13,7 @@ class Region(WebView):
     :param page: Page object this region appears in.
     :param root: (optional) element that serves as the root for the region.
     :type page: :py:class:`~.page.Page`
-    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement`
+    :type root: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like element
 
     Usage::
 
@@ -56,7 +56,7 @@ class Region(WebView):
         Page regions should define a root element either by passing this on
         instantiation or by defining a :py:attr:`_root_locator` attribute. To
         reduce the chances of hitting :py:class:`~selenium.common.exceptions.StaleElementReferenceException`
-        you should use :py:attr:`_root_locator`, as this is looked up every
+        or similar you should use :py:attr:`_root_locator`, as this is looked up every
         time the :py:attr:`root` property is accessed.
         """
         if self._root is None and self._root_locator is not None:
@@ -103,8 +103,8 @@ class Region(WebView):
         :param locator: Location of target element.
         :type strategy: str
         :type locator: str
-        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
-        :rtype: selenium.webdriver.remote.webelement.WebElement
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
+        :rtype: selenium.webdriver.remote.webelement.WebElement like object
 
         """
         root = self.root
@@ -119,7 +119,7 @@ class Region(WebView):
         :param locator: Location of target elements.
         :type strategy: str
         :type locator: str
-        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` like objects.
         :rtype: list
 
         """
