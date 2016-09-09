@@ -89,7 +89,9 @@ class TestRootElement:
         root_element.find_elements.assert_called_once_with(*locator)
         selenium.find_elements.assert_not_called()
 
-    def test_is_element_present(self, page, selenium):
+    def test_is_element_present_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         assert Region(page, root=root_element).is_element_present(*locator)
@@ -142,6 +144,17 @@ class TestRootElement:
 
 
 class TestRootElementSplinter:
+
+    def test_is_element_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        root_element = Mock()
+        locator = (splinter_strategy, str(random.random()))
+        from splinter.element_list import ElementList
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
+            mock_find_element.return_value = ElementList([Mock()])
+            assert Region(page, root=root_element).is_element_present(*locator)
+            mock_find_element.assert_called_once_with(*locator, root=root_element)
 
     def test_is_element_present_not_preset_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
