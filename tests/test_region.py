@@ -75,7 +75,9 @@ class TestRootElement:
         element = Mock()
         assert Region(page, root=element).root == element
 
-    def test_find_element(self, page, selenium):
+    def test_find_element_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         Region(page, root=root_element).find_element(*locator)
@@ -147,11 +149,20 @@ class TestRootElement:
 
 class TestRootElementSplinter:
 
+    def test_find_element_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        root_element = MagicMock()
+        root_element.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): Mock()})
+        locator = (splinter_strategy, str(random.random()))
+        Region(page, root=root_element).find_element(*locator)
+        getattr(root_element, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
+
     def test_find_elements_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
-        root_element.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): True})
+        root_element.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): Mock()})
         locator = (splinter_strategy, str(random.random()))
         Region(page, root=root_element).find_elements(*locator)
         getattr(root_element, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
