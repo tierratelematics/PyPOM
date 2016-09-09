@@ -107,9 +107,6 @@ class Region(WebView):
         :rtype: selenium.webdriver.remote.webelement.WebElement like object
 
         """
-        root = self.root
-        if root is not None:
-            return root.find_element(strategy, locator)
         return super(Region, self).find_element(strategy, locator, root=self.root)
 
     def find_elements(self, strategy, locator):

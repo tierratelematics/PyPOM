@@ -145,7 +145,9 @@ class TestRootLocator:
         assert element == region.root
         selenium.find_element.assert_called_once_with(*region._root_locator)
 
-    def test_find_element(self, element, region, selenium):
+    def test_find_element_selenium(self, element, region, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         region.find_element(*locator)
         selenium.find_element.assert_called_once_with(*region._root_locator)
@@ -213,6 +215,14 @@ class TestRootLocatorSplinter:
         class MyRegion(Region):
             _root_locator = (splinter_strategy, str(random.random()))
         return MyRegion(page)
+
+    def test_find_element_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        locator = (splinter_strategy, str(random.random()))
+        region.find_element(*locator)
+
+        getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
     def test_find_elements_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
