@@ -191,10 +191,25 @@ class TestRootLocator:
             mock_find_element.return_value = ElementList([])
             assert not region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_hidden(self, element, region, selenium):
+    def test_is_element_displayed_hidden_selenium(self, element, region, selenium, driver_interface):
+        if 'Selenium' not in driver_interface.__identifier__:
+            # selenium specific
+            pytest.skip()
         locator = (str(random.random()), str(random.random()))
         hidden_element = element.find_element()
         hidden_element.is_displayed.return_value = False
         assert not region.is_element_displayed(*locator)
         element.find_element.assert_called_with(*locator)
         hidden_element.is_displayed.assert_called_once_with()
+
+    def test_is_element_displayed_hidden_splinter(self, element, region, selenium, driver_interface):
+        if 'Splinter' not in driver_interface.__identifier__:
+            # splinter specific
+            pytest.skip()
+        locator = (str(random.random()), str(random.random()))
+        from mock import patch
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
+            visible_mock = Mock().visible.return_value = False
+            first_mock = Mock().first.return_value = visible_mock
+            mock_find_element.return_value = first_mock
+            assert not region.is_element_displayed(*locator)
