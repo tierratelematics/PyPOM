@@ -60,13 +60,31 @@ class TestNoRoot:
         selenium.find_element.assert_called_once_with(*locator)
         selenium.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_hidden(self, page, selenium):
+    def test_is_element_displayed_hidden_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         hidden_element = selenium.find_element()
         hidden_element.is_displayed.return_value = False
         assert not Region(page).is_element_displayed(*locator)
         selenium.find_element.assert_called_with(*locator)
         hidden_element.is_displayed.assert_called_once_with()
+
+
+class TestNoRootSplinter:
+
+    def test_is_element_displayed_hidden_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        locator = (splinter_strategy, str(random.random()))
+        hidden_element = selenium.find_element()
+        hidden_element.is_displayed.return_value = False
+        region = Region(page)
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
+            visible_mock = Mock().visible.return_value = False
+            first_mock = Mock().first.return_value = visible_mock
+            mock_find_element.return_value = first_mock
+            assert not region.is_element_displayed(*locator)
 
 
 class TestRootElement:
