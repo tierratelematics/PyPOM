@@ -180,16 +180,16 @@ class TestRootLocator:
         element.find_element.assert_called_once_with(*locator)
         element.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_not_present_splinter(self, element, region, selenium, driver_interface):
+    def test_is_element_displayed_not_present_splinter(self, region, selenium, driver_interface):
         if 'Splinter' not in driver_interface.__identifier__:
             # splinter specific
             pytest.skip()
         locator = (str(random.random()), str(random.random()))
-        from selenium.common.exceptions import NoSuchElementException
-        element.find_element.side_effect = NoSuchElementException()
-        assert not region.is_element_displayed(*locator)
-        element.find_element.assert_called_once_with(*locator)
-        element.find_element.is_displayed.assert_not_called()
+        from splinter.element_list import ElementList
+        from mock import patch
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
+            mock_find_element.return_value = ElementList([])
+            assert not region.is_element_displayed(*locator)
 
     def test_is_element_displayed_hidden(self, element, region, selenium):
         locator = (str(random.random()), str(random.random()))

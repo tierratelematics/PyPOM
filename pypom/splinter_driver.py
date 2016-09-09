@@ -103,7 +103,12 @@ class Splinter(object):
         :rtype: bool
 
         """
-        return self.find_element(strategy, locator, root=root).first.visible()
+
+        elements = self.find_element(strategy, locator, root=root)
+        element = None
+        if elements:
+            element = elements.first
+        return element and element.visible() or False
 
 
 def register():
