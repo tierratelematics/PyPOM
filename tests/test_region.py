@@ -4,9 +4,17 @@
 
 import random
 
-from mock import Mock
+from mock import (
+    Mock,
+    MagicMock,
+    patch,
+)
 from pypom import Region
 import pytest
+from .util import (
+    skip_not_selenium,
+    skip_not_splinter,
+)
 
 
 class TestWaitForRegion:
@@ -163,16 +171,25 @@ class TestRootLocator:
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_displayed(self, element, region, selenium):
+    def test_is_element_displayed_selenium(self, element, region, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         assert region.is_element_displayed(*locator)
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
+    def test_is_element_displayed_splinter(self, region, selenium, driver_interface):
+        skip_not_splinter(driver_interface)
+
+        locator = (str(random.random()), str(random.random()))
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
+            mock_find_element.return_value.first.visible.return_value = True
+            assert region.is_element_displayed(*locator)
+
     def test_is_element_displayed_not_present_selenium(self, element, region, selenium, driver_interface):
-        if 'Selenium' not in driver_interface.__identifier__:
-            # selenium specific
-            pytest.skip()
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
         element.find_element.side_effect = NoSuchElementException()
@@ -181,20 +198,17 @@ class TestRootLocator:
         element.find_element.is_displayed.assert_not_called()
 
     def test_is_element_displayed_not_present_splinter(self, region, selenium, driver_interface):
-        if 'Splinter' not in driver_interface.__identifier__:
-            # splinter specific
-            pytest.skip()
+        skip_not_splinter(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         from splinter.element_list import ElementList
-        from mock import patch
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
             mock_find_element.return_value = ElementList([])
             assert not region.is_element_displayed(*locator)
 
     def test_is_element_displayed_hidden_selenium(self, element, region, selenium, driver_interface):
-        if 'Selenium' not in driver_interface.__identifier__:
-            # selenium specific
-            pytest.skip()
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         hidden_element = element.find_element()
         hidden_element.is_displayed.return_value = False
@@ -202,12 +216,10 @@ class TestRootLocator:
         element.find_element.assert_called_with(*locator)
         hidden_element.is_displayed.assert_called_once_with()
 
-    def test_is_element_displayed_hidden_splinter(self, element, region, selenium, driver_interface):
-        if 'Splinter' not in driver_interface.__identifier__:
-            # splinter specific
-            pytest.skip()
+    def test_is_element_displayed_hidden_splinter(self, region, selenium, driver_interface):
+        skip_not_splinter(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
-        from mock import patch
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
             visible_mock = Mock().visible.return_value = False
             first_mock = Mock().first.return_value = visible_mock
