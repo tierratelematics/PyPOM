@@ -122,7 +122,9 @@ class TestRootElement:
         root_element.find_element.assert_called_once_with(*locator)
         root_element.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_hidden(self, page, selenium):
+    def test_is_element_displayed_hidden_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         hidden_element = root_element.find_element()
@@ -131,6 +133,19 @@ class TestRootElement:
         assert not region.is_element_displayed(*locator)
         root_element.find_element.assert_called_with(*locator)
         hidden_element.is_displayed.assert_called_once_with()
+
+
+class TestRootElementSplinter:
+
+    def test_is_element_displayed_hidden_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        root_element = Mock()
+        locator = (splinter_strategy, str(random.random()))
+        region = Region(page, root=root_element)
+        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
+            mock_find_element.return_value.first.visible.return_value = False
+            assert not region.is_element_displayed(*locator)
 
 
 class TestRootLocator:
@@ -249,36 +264,36 @@ class TestRootLocatorSplinter:
         assert region.is_element_present(*locator)
         getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_is_element_present_not_present_splinter(self, region, driver_interface):
+    def test_is_element_present_not_present_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         from splinter.element_list import ElementList
-        locator = (str(random.random()), str(random.random()))
+        locator = (splinter_strategy, str(random.random()))
         with patch('pypom.splinter_driver.Splinter.find_elements', new_callable=MagicMock()) as mock_find_elements:
             mock_find_elements.return_value = ElementList([])
             assert not region.is_element_present(*locator)
 
-    def test_is_element_displayed_splinter(self, region, driver_interface):
+    def test_is_element_displayed_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
-        locator = (str(random.random()), str(random.random()))
+        locator = (splinter_strategy, str(random.random()))
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
             mock_find_element.return_value.first.visible.return_value = True
             assert region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_not_present_splinter(self, region, driver_interface):
+    def test_is_element_displayed_not_present_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
-        locator = (str(random.random()), str(random.random()))
+        locator = (splinter_strategy, str(random.random()))
         from splinter.element_list import ElementList
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
             mock_find_element.return_value = ElementList([])
             assert not region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_hidden_splinter(self, region, driver_interface):
+    def test_is_element_displayed_hidden_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
-        locator = (str(random.random()), str(random.random()))
+        locator = (splinter_strategy, str(random.random()))
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
             visible_mock = Mock().visible.return_value = False
             first_mock = Mock().first.return_value = visible_mock
