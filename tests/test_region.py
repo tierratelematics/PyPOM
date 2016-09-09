@@ -96,7 +96,9 @@ class TestRootElement:
         root_element.find_element.assert_called_once_with(*locator)
         selenium.find_element.assert_not_called()
 
-    def test_is_element_present_not_preset(self, page, selenium):
+    def test_is_element_present_not_preset_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
@@ -140,6 +142,15 @@ class TestRootElement:
 
 
 class TestRootElementSplinter:
+
+    def test_is_element_present_not_preset_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        root_element = MagicMock()
+        from splinter.element_list import ElementList
+        root_element.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): ElementList([])})
+        locator = (splinter_strategy, str(random.random()))
+        assert not Region(page, root=root_element).is_element_present(*locator)
 
     def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
