@@ -119,10 +119,7 @@ class Splinter(object):
 
         """
 
-        elements = self.find_element(strategy, locator, root=root)
-        element = None
-        if elements:
-            element = elements.first
+        element = self.find_element(strategy, locator, root=root)
         return element and element.visible() or False
 
 

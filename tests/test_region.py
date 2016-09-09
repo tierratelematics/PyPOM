@@ -105,7 +105,9 @@ class TestRootElement:
         root_element.find_element.assert_called_once_with(*locator)
         selenium.find_element.assert_not_called()
 
-    def test_is_element_displayed(self, page, selenium):
+    def test_is_element_displayed_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         assert Region(page, root=root_element).is_element_displayed(*locator)
@@ -139,6 +141,15 @@ class TestRootElement:
 
 class TestRootElementSplinter:
 
+    def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        root_element = MagicMock()
+        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): True})
+        locator = (splinter_strategy, str(random.random()))
+        region = Region(page, root=root_element)
+        assert region.is_element_displayed(*locator)
+
     def test_is_element_displayed_not_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
@@ -153,12 +164,11 @@ class TestRootElementSplinter:
     def test_is_element_displayed_hidden_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
-        root_element = Mock()
+        root_element = MagicMock()
+        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): False})
         locator = (splinter_strategy, str(random.random()))
         region = Region(page, root=root_element)
-        with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
-            mock_find_element.return_value.first.visible.return_value = False
-            assert not region.is_element_displayed(*locator)
+        assert not region.is_element_displayed(*locator)
 
 
 class TestRootLocator:
