@@ -218,13 +218,13 @@ class TestRootLocatorSplinter:
             _root_locator = (splinter_strategy, str(random.random()))
         return MyRegion(page)
 
-    def test_root_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+    def test_root_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         region.root
         getattr(region.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(region._root_locator[1])
 
-    def test_find_element_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+    def test_find_element_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
@@ -232,7 +232,7 @@ class TestRootLocatorSplinter:
 
         getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_find_elements_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+    def test_find_elements_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
@@ -240,7 +240,7 @@ class TestRootLocatorSplinter:
 
         getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_is_element_present_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+    def test_is_element_present_splinter(self, region, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         assert region._root_locator[0] == splinter_strategy
@@ -249,7 +249,7 @@ class TestRootLocatorSplinter:
         assert region.is_element_present(*locator)
         getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_is_element_present_not_present_splinter(self, element, region, selenium, driver_interface):
+    def test_is_element_present_not_present_splinter(self, region, driver_interface):
         skip_not_splinter(driver_interface)
 
         from splinter.element_list import ElementList
@@ -258,7 +258,7 @@ class TestRootLocatorSplinter:
             mock_find_elements.return_value = ElementList([])
             assert not region.is_element_present(*locator)
 
-    def test_is_element_displayed_splinter(self, region, selenium, driver_interface):
+    def test_is_element_displayed_splinter(self, region, driver_interface):
         skip_not_splinter(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
@@ -266,7 +266,7 @@ class TestRootLocatorSplinter:
             mock_find_element.return_value.first.visible.return_value = True
             assert region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_not_present_splinter(self, region, selenium, driver_interface):
+    def test_is_element_displayed_not_present_splinter(self, region, driver_interface):
         skip_not_splinter(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
@@ -275,7 +275,7 @@ class TestRootLocatorSplinter:
             mock_find_element.return_value = ElementList([])
             assert not region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_hidden_splinter(self, region, selenium, driver_interface):
+    def test_is_element_displayed_hidden_splinter(self, region, driver_interface):
         skip_not_splinter(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
