@@ -53,7 +53,8 @@ class Splinter(object):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
-        return self.find_elements(strategy, locator, root=root).first
+        elements = self.find_elements(strategy, locator, root=root)
+        return elements and elements.first or None
 
     def find_elements(self, strategy, locator, root=None):
         """Finds elements on the page.

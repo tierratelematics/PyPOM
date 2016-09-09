@@ -163,13 +163,24 @@ class TestRootLocator:
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_present_not_preset(self, element, region, selenium):
+    def test_is_element_present_not_present_selenium(self, element, region, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
         element.find_element.side_effect = NoSuchElementException()
         assert not region.is_element_present(*locator)
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
+
+    def test_is_element_present_not_present_splinter(self, element, region, selenium, driver_interface):
+        skip_not_splinter(driver_interface)
+
+        from splinter.element_list import ElementList
+        locator = (str(random.random()), str(random.random()))
+        with patch('pypom.splinter_driver.Splinter.find_elements', new_callable=MagicMock()) as mock_find_elements:
+            mock_find_elements.return_value = ElementList([])
+            assert not region.is_element_present(*locator)
 
     def test_is_element_displayed_selenium(self, element, region, selenium, driver_interface):
         skip_not_selenium(driver_interface)
