@@ -157,7 +157,9 @@ class TestRootLocator:
         selenium.find_element.assert_called_once_with(*region._root_locator)
         element.find_elements.assert_called_once_with(*locator)
 
-    def test_is_element_present(self, element, region, selenium):
+    def test_is_element_present_selenium(self, element, region, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         assert region.is_element_present(*locator)
         selenium.find_element.assert_called_once_with(*region._root_locator)
@@ -236,3 +238,21 @@ class TestRootLocator:
             first_mock = Mock().first.return_value = visible_mock
             mock_find_element.return_value = first_mock
             assert not region.is_element_displayed(*locator)
+
+
+class TestRootLocatorSplinter:
+
+    @pytest.fixture
+    def region(self, page, splinter_strategy):
+        class MyRegion(Region):
+            _root_locator = (splinter_strategy, str(random.random()))
+        return MyRegion(page)
+
+    def test_is_element_present_splinter(self, element, region, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        assert region._root_locator[0] == splinter_strategy
+        locator = (splinter_strategy, str(random.random()))
+
+        assert region.is_element_present(*locator)
+        getattr(region.root, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])

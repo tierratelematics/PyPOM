@@ -5,7 +5,10 @@
 from mock import Mock
 import pytest
 from pypom.selenium_driver import ISelenium
-from pypom.splinter_driver import ISplinter
+from pypom.splinter_driver import (
+    ISplinter,
+    ALLOWED_STRATEGIES,
+)
 from zope.interface import alsoProvides
 
 
@@ -37,3 +40,8 @@ def selenium(request, driver_interface):
     mock = Mock()
     alsoProvides(mock, driver_interface)
     return mock
+
+
+@pytest.fixture(params=ALLOWED_STRATEGIES)
+def splinter_strategy(request):
+    return request.param

@@ -14,6 +14,17 @@ from splinter.driver.webdriver.chrome import WebDriver as ChromeWebDriver
 from splinter.driver.webdriver.phantomjs import WebDriver as PhantomJSWebDriver
 from .interfaces import IDriver
 from .driver import registerDriver
+from .exception import UsageError
+
+ALLOWED_STRATEGIES = {
+    'name',
+    'id',
+    'css',
+    'xpath',
+    'text',
+    'value',
+    'tag',
+}
 
 
 class ISplinter(Interface):
@@ -74,7 +85,10 @@ class Splinter(object):
         else:
             node = self.driver
 
-        return getattr(node, 'find_by_' + strategy)(locator)
+        if strategy in ALLOWED_STRATEGIES:
+            return getattr(node, 'find_by_' + strategy)(locator)
+        else:
+            raise UsageError('Strategy not allowed')
 
     def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
