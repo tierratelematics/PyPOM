@@ -42,7 +42,9 @@ class TestNoRoot:
         Region(page).find_element(*locator)
         selenium.find_element.assert_called_once_with(*locator)
 
-    def test_find_elements(self, page, selenium):
+    def test_find_elements_selenium(self, page, selenium, driver_interface):
+        skip_not_selenium(driver_interface)
+
         locator = (str(random.random()), str(random.random()))
         Region(page).find_elements(*locator)
         selenium.find_elements.assert_called_once_with(*locator)
@@ -76,6 +78,15 @@ class TestNoRoot:
 
 
 class TestNoRootSplinter:
+
+    def test_find_elements_splinter(self, page, selenium, driver_interface, splinter_strategy):
+        skip_not_splinter(driver_interface)
+
+        locator = (splinter_strategy, str(random.random()))
+        from splinter.element_list import ElementList
+        page.driver.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): ElementList([])})
+        Region(page).find_elements(*locator)
+        getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
     def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
