@@ -98,10 +98,20 @@ def test_wait_for_page_empty_base_url(selenium):
     assert isinstance(Page(selenium).wait_for_page_to_load(), Page)
 
 
-def test_find_element(page, selenium):
+def test_find_element_selenium(page, selenium, driver_interface):
+    skip_not_selenium(driver_interface)
+
     locator = (str(random.random()), str(random.random()))
     page.find_element(*locator)
     selenium.find_element.assert_called_once_with(*locator)
+
+
+def test_find_element_splinter(page, selenium, driver_interface, splinter_strategy):
+    skip_not_splinter(driver_interface)
+
+    locator = (splinter_strategy, str(random.random()))
+    page.find_element(*locator)
+    getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
 
 def test_find_elements_selenium(page, selenium, driver_interface):
