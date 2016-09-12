@@ -116,12 +116,24 @@ def test_is_element_present(page, selenium):
     selenium.find_element.assert_called_once_with(*locator)
 
 
-def test_is_element_present_not_present(page, selenium):
+def test_is_element_present_not_present_selenium(page, selenium, driver_interface):
+    skip_not_selenium(driver_interface)
+
     locator = (str(random.random()), str(random.random()))
     from selenium.common.exceptions import NoSuchElementException
     selenium.find_element.side_effect = NoSuchElementException()
     assert not page.is_element_present(*locator)
     selenium.find_element.assert_called_once_with(*locator)
+
+
+def test_is_element_present_not_present_splinter(page, selenium, driver_interface, splinter_strategy):
+    skip_not_splinter(driver_interface)
+
+    locator = (splinter_strategy, str(random.random()))
+    from splinter.element_list import ElementList
+    page.driver.configure_mock(**{'find_by_{0}.return_value'.format(splinter_strategy): ElementList([])})
+    assert not page.is_element_present(*locator)
+    getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
 
 def test_is_element_displayed_selenium(page, selenium, driver_interface):
