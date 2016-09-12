@@ -104,10 +104,20 @@ def test_find_element(page, selenium):
     selenium.find_element.assert_called_once_with(*locator)
 
 
-def test_find_elements(page, selenium):
+def test_find_elements_selenium(page, selenium, driver_interface):
+    skip_not_selenium(driver_interface)
+
     locator = (str(random.random()), str(random.random()))
     page.find_elements(*locator)
     selenium.find_elements.assert_called_once_with(*locator)
+
+
+def test_find_elements_splinter(page, selenium, driver_interface, splinter_strategy):
+    skip_not_splinter(driver_interface)
+
+    locator = (splinter_strategy, str(random.random()))
+    page.find_elements(*locator)
+    getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
 
 def test_is_element_present_selenium(page, selenium, driver_interface):
