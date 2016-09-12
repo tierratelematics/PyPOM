@@ -43,7 +43,7 @@ class Splinter(object):
         :param timeout: Timeout used by WebDriverWait like calls
         :type timeout: int
         """
-        # return WebDriverWait(self.driver, timeout)
+        return self.driver.wait_for_condition
 
     def open(self, url):
         """Open the page.
