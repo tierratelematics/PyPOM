@@ -81,6 +81,14 @@ class TestNoRoot:
 
 class TestNoRootSplinter:
 
+    def test_no_root_usage_error(self, page, selenium, driver_interface):
+        skip_not_splinter(driver_interface)
+
+        locator = ('not_valid_strategy', str(random.random()))
+        from pypom.exception import UsageError
+        with pytest.raises(UsageError):
+            Region(page).find_element(*locator)
+
     def test_find_element_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
@@ -210,6 +218,15 @@ class TestRootElement:
 
 
 class TestRootElementSplinter:
+
+    def test_no_root_usage_error(self, page, selenium, driver_interface):
+        skip_not_splinter(driver_interface)
+
+        root_element = MagicMock()
+        locator = ('not_valid_strategy', str(random.random()))
+        from pypom.exception import UsageError
+        with pytest.raises(UsageError):
+            Region(page, root=root_element).find_element(*locator)
 
     def test_find_element_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
