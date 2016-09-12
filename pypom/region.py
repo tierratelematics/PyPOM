@@ -96,7 +96,7 @@ class Region(WebView):
         """
         return self
 
-    def find_element(self, strategy, locator):
+    def find_element(self, strategy, locator, root=None):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
@@ -109,7 +109,7 @@ class Region(WebView):
         """
         return super(Region, self).find_element(strategy, locator, root=self.root)
 
-    def find_elements(self, strategy, locator):
+    def find_elements(self, strategy, locator, root=None):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
