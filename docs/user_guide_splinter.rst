@@ -1,5 +1,5 @@
-User Guide
-==========
+User Guide (Splinter)
+=====================
 
 .. contents:: :depth: 3
 
