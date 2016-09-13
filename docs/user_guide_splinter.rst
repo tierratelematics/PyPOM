@@ -11,18 +11,18 @@ simulating user actions, and providing properties that return state from the
 page. The :py:class:`~pypom.page.Page` class provided by PyPOM provides a
 simple implementation that can be sub-classed to apply to your project.
 
-To instantiate a page object with PyPOM you will need a Selenium_
-:py:class:`~selenium.webdriver.remote.webdriver.WebDriver` object. The
+To instantiate a page object with PyPOM you will need a Splinter_
+:py:class:`~splinter.Browser` object. The
 following very simple example opens the Mozilla website in Firefox, and
 instantiates a page object representing the landing page::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
+  from splinter import Browser
 
   class Mozilla(Page):
       pass
 
-  driver = Firefox()
+  driver = Browser()
   driver.get('https://www.mozilla.org')
   page = Mozilla(driver)
 
@@ -38,13 +38,13 @@ is provided, then calling :py:func:`~pypom.page.Page.open` will open this base
 URL::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
+  from splinter import Browser
 
   class Mozilla(Page):
       pass
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
+  driver = Browser()
   page = Mozilla(driver, base_url).open()
 
 URL templates
@@ -56,13 +56,13 @@ provided). In the following example the URL https://www.mozilla.org/about/ will
 be opened::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
+  from splinter import Browser
 
   class Mozilla(Page):
       URL_TEMPLATE = '/about/'
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
+  driver = Browser()
   page = Mozilla(driver, base_url).open()
 
 As this is a template, any additional keyword arguments passed when
@@ -70,20 +70,20 @@ instantiating the page object will attempt to resolve any placeholders. The
 following example adds a locale to the URL::
 
   from pypom import Page
-  from selenium.webdriver import Firefox
+  from splinter import Browser
 
   class Mozilla(Page):
       URL_TEMPLATE = '/{locale}/about/'
 
   base_url = 'https://www.mozilla.org'
-  driver = Firefox()
+  driver = Browser()
   page = Mozilla(driver, base_url, locale='de').open()
 
 Waiting for pages to load
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Whenever Selenium_ detects that a page is loading, it does it's best to block
-until it's complete. Unfortunately, as Seleniun does not know your application,
+Whenever Splinter_ detects that a page is loading, it does it's best to block
+until it's complete. Unfortunately, as Splinter does not know your application,
 it's quite common for it to return earlier than a user would consider the page
 to be ready. For this reason, the :py:func:`~pypom.page.Page.wait_for_page_to_load`
 function can be overridden and customised for your project's needs by adding
@@ -100,7 +100,7 @@ application::
   class Mozilla(Page):
 
       def wait_for_page_to_load(self):
-          self.wait.until(lambda s: self.seed_url in s.current_url)
+          self.wait.until(lambda s: self.seed_url in s.url)
 
 Other things to wait for might include when elements are displayed or enabled,
 or when an element has a particular class. This will be very dependent on your
@@ -146,7 +146,7 @@ region, you can interact with any of these items in a common way::
   from selenium.webdriver.common.by import By
 
   class Results(Page):
-      _result_locator = (By.CLASS_NAME, 'result')
+      _result_locator = ('css', '.result')
 
       @property
       def results(self):
@@ -154,11 +154,11 @@ region, you can interact with any of these items in a common way::
           return [self.Result(el) for el in results]
 
       class Result(Region):
-          _name_locator = (By.CLASS_NAME, 'name')
+          _name_locator = ('css', '.name')
 
           @property
           def name(self):
-              return self.find_element(*self._name_locator).text
+              return self.find_element(*self._name_locator).first.text
 
 The above example provides a ``results`` property on the page class. When
 called, this locates all results on the page and returns a list of ``Result``
@@ -184,7 +184,7 @@ module::
           return self.Header(self)
 
       class Header(Region):
-          _root_locator = (By.ID, 'header')
+          _root_locator = ('id', 'header')
 
           def is_displayed(self):
               return self.root.is_displayed()
@@ -209,7 +209,7 @@ displayed::
   class Header(Region):
 
       def wait_for_region_to_load(self):
-          self.wait.until(lambda s: self.root.is_displayed())
+          self.wait.until(lambda s: self.root.visible())
 
 Other things to wait for might include when elements are displayed or enabled,
 or when an element has a particular class. This will be very dependent on your
@@ -219,8 +219,17 @@ Locators
 --------
 
 In order to locate elements you need to specify both a locator strategy and the
-locator itself. The :py:class:`~selenium.webdriver.common.by.By` class covers
-the common locator strategies. A suggested approach is to store your locators
+locator itself. Allowed strategies are:
+
+* name
+* id
+* css
+* xpath
+* text
+* value
+* tag
+
+A suggested approach is to store your locators
 at the top of your page/region classes. Ideally these should be preceeded with
 a single underscore to indicate that they're primarily reserved for internal
 use. These attributes can be stored as a two item tuple containing both the
@@ -233,11 +242,11 @@ The following example shows a locator being defined and used in a page object::
   from selenium.webdriver.common.by import By
 
   class Mozilla(Page):
-      _logo_locator = (By.ID, 'logo')
+      _logo_locator = ('id', 'logo')
 
       def wait_for_page_to_load(self):
-          logo = self.find_element(*self._logo_locator)
-          self.wait.until(lambda s: logo.is_displayed())
+          logo = self.find_element(*self._logo_locator).first
+          self.wait.until(lambda s: logo.visible())
 
 Explicit waits
 --------------
@@ -263,7 +272,7 @@ box that causes a button to become enabled::
 
       def accept_privacy_policy(self):
           self.find_element(*self._privacy_policy_locator).click()
-          sign_me_up = self.find_element(*self._sign_me_up_locator)
+          sign_me_up = self.find_element(*self._sign_me_up_locator).first
           self.wait.until(lambda s: sign_me_up.is_enabled())
 
 You can either specify a timeout by passing the optional ``timeout`` keyword
@@ -278,4 +287,4 @@ inherited by a base project page class.
   you have interactions that take longer than the default you may find that you
   have a performance issue that will considerably affect the user experience.
 
-.. _Selenium: http://docs.seleniumhq.org/
+.. _Splinter: https://github.com/cobrateam/splinter
