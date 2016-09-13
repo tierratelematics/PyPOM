@@ -13,62 +13,66 @@ class WebView(object):
         self.timeout = timeout
         self.wait = self.driver_adapter.wait_factory(self.timeout)
 
-    def find_element(self, strategy, locator, root=None):
+    def find_element(self, strategy, locator):
         """Finds an element on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
-        return self.driver_adapter.find_element(strategy, locator, root=root)
+        root = getattr(self, 'root', None)
+        if root is not None:
+            return self.driver_adapter.find_element(strategy, locator, root=root)
+        return self.driver_adapter.find_element(strategy, locator)
 
-    def find_elements(self, strategy, locator, root=None):
+    def find_elements(self, strategy, locator):
         """Finds elements on the page.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target elements.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` like objects.
         :rtype: list
 
         """
-        return self.driver_adapter.find_elements(strategy, locator, root=root)
+        root = getattr(self, 'root', None)
+        if root is not None:
+            return self.driver_adapter.find_elements(strategy, locator, root=root)
+        return self.driver_adapter.find_elements(strategy, locator)
 
-    def is_element_present(self, strategy, locator, root=None):
+    def is_element_present(self, strategy, locator):
         """Checks whether an element is present.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
 
         """
-        return self.driver_adapter.is_element_present(strategy, locator, root=root)
+        root = getattr(self, 'root', None)
+        if root is not None:
+            return self.driver_adapter.is_element_present(strategy, locator, root=root)
+        return self.driver_adapter.is_element_present(strategy, locator)
 
-    def is_element_displayed(self, strategy, locator, root=None):
+    def is_element_displayed(self, strategy, locator):
         """Checks whether an element is displayed.
 
         :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
 
         """
-        return self.driver_adapter.is_element_displayed(strategy, locator, root=root)
+        root = getattr(self, 'root', None)
+        if root is not None:
+            return self.driver_adapter.is_element_displayed(strategy, locator, root=root)
+        return self.driver_adapter.is_element_displayed(strategy, locator)
