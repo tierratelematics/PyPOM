@@ -22,8 +22,7 @@ class TestWaitForRegion:
     def test_wait_for_region(self, page):
         assert isinstance(Region(page).wait_for_region_to_load(), Region)
 
-    def test_wait_for_region_timeout_selenium(self, page, driver_interface):
-        skip_not_selenium(driver_interface)
+    def test_wait_for_region_timeout(self, page):
 
         class MyRegion(Region):
             def wait_for_region_to_load(self):
@@ -32,21 +31,6 @@ class TestWaitForRegion:
         from selenium.common.exceptions import TimeoutException
         with pytest.raises(TimeoutException):
             MyRegion(page)
-
-    def test_wait_for_region_timeout_splinter(self, page, driver_interface):
-        skip_not_splinter(driver_interface)
-
-        def condition(browser):
-            return False
-
-        class MyRegion(Region):
-            def wait_for_region_to_load(self):
-                self.wait(condition, page.timeout)
-        page.timeout = 0
-        page.driver.wait_for_condition.side_effect = Exception()
-        with pytest.raises(Exception):
-            MyRegion(page)
-        page.driver.wait_for_condition.assert_called_once_with(condition, page.timeout)
 
 
 class TestNoRoot:

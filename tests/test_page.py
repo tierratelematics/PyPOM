@@ -70,8 +70,7 @@ def test_open_seed_url_none(selenium):
         page.open()
 
 
-def test_open_timeout_selenium(base_url, selenium, driver_interface):
-    skip_not_selenium(driver_interface)
+def test_open_timeout(base_url, selenium):
 
     class MyPage(Page):
         def wait_for_page_to_load(self):
@@ -79,20 +78,6 @@ def test_open_timeout_selenium(base_url, selenium, driver_interface):
     page = MyPage(selenium, base_url, timeout=0)
     from selenium.common.exceptions import TimeoutException
     with pytest.raises(TimeoutException):
-        page.open()
-
-
-def test_open_timeout_splinter(base_url, selenium, driver_interface):
-    skip_not_selenium(driver_interface)
-
-    def condition(browser):
-        return False
-
-    class MyPage(Page):
-        def wait_for_page_to_load(self):
-            self.wait(condition, page.timeout)
-    page = MyPage(selenium, base_url, timeout=0)
-    with pytest.raises(Exception):
         page.open()
 
 
@@ -100,8 +85,7 @@ def test_wait_for_page(page, selenium):
     assert isinstance(page.wait_for_page_to_load(), Page)
 
 
-def test_wait_for_page_timeout_selenium(base_url, selenium, driver_interface):
-    skip_not_selenium(driver_interface)
+def test_wait_for_page_timeout(base_url, selenium):
 
     class MyPage(Page):
         def wait_for_page_to_load(self):
@@ -109,20 +93,6 @@ def test_wait_for_page_timeout_selenium(base_url, selenium, driver_interface):
     page = MyPage(selenium, base_url, timeout=0)
     from selenium.common.exceptions import TimeoutException
     with pytest.raises(TimeoutException):
-        page.wait_for_page_to_load()
-
-
-def test_wait_for_page_timeout_splinter(base_url, selenium, driver_interface):
-    skip_not_selenium(driver_interface)
-
-    def condition(browser):
-        return False
-
-    class MyPage(Page):
-        def wait_for_page_to_load(self):
-            self.wait(condition, page.timeout)
-    page = MyPage(selenium, base_url, timeout=0)
-    with pytest.raises(Exception):
         page.wait_for_page_to_load()
 
 
