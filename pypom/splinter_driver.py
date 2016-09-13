@@ -113,7 +113,7 @@ class Splinter(Selenium):
         """
 
         element = self.find_element(strategy, locator, root=root)
-        return element and element.visible() or False
+        return element and element.visible or False
 
 
 def register():
