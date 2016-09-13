@@ -17,7 +17,7 @@ from .driver import registerDriver
 from .selenium_driver import Selenium
 from .exception import UsageError
 
-ALLOWED_STRATEGIES = {
+ALLOWED_STRATEGIES = [
     'name',
     'id',
     'css',
@@ -25,7 +25,7 @@ ALLOWED_STRATEGIES = {
     'text',
     'value',
     'tag',
-}
+]
 
 
 class ISplinter(Interface):
