@@ -95,3 +95,55 @@ class Region(WebView):
 
         """
         return self
+
+    def find_element(self, strategy, locator):
+        """Finds an element on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` like object.
+        :rtype: selenium.webdriver.remote.webelement.WebElement
+
+        """
+        return self.driver_adapter.find_element(strategy, locator, root=self.root)
+
+    def find_elements(self, strategy, locator):
+        """Finds elements on the page.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target elements.
+        :type strategy: str
+        :type locator: str
+        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` like objects.
+        :rtype: list
+
+        """
+        return self.driver_adapter.find_elements(strategy, locator, root=self.root)
+
+    def is_element_present(self, strategy, locator):
+        """Checks whether an element is present.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is present, else ``False``.
+        :rtype: bool
+
+        """
+        return self.driver_adapter.is_element_present(strategy, locator, root=self.root)
+
+    def is_element_displayed(self, strategy, locator):
+        """Checks whether an element is displayed.
+
+        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param locator: Location of target element.
+        :type strategy: str
+        :type locator: str
+        :return: ``True`` if element is displayed, else ``False``.
+        :rtype: bool
+
+        """
+        return self.driver_adapter.is_element_displayed(strategy, locator, root=self.root)

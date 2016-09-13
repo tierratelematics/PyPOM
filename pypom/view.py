@@ -24,9 +24,6 @@ class WebView(object):
         :rtype: selenium.webdriver.remote.webelement.WebElement
 
         """
-        root = getattr(self, 'root', None)
-        if root is not None:
-            return self.driver_adapter.find_element(strategy, locator, root=root)
         return self.driver_adapter.find_element(strategy, locator)
 
     def find_elements(self, strategy, locator):
@@ -40,9 +37,6 @@ class WebView(object):
         :rtype: list
 
         """
-        root = getattr(self, 'root', None)
-        if root is not None:
-            return self.driver_adapter.find_elements(strategy, locator, root=root)
         return self.driver_adapter.find_elements(strategy, locator)
 
     def is_element_present(self, strategy, locator):
@@ -56,9 +50,6 @@ class WebView(object):
         :rtype: bool
 
         """
-        root = getattr(self, 'root', None)
-        if root is not None:
-            return self.driver_adapter.is_element_present(strategy, locator, root=root)
         return self.driver_adapter.is_element_present(strategy, locator)
 
     def is_element_displayed(self, strategy, locator):
@@ -72,7 +63,4 @@ class WebView(object):
         :rtype: bool
 
         """
-        root = getattr(self, 'root', None)
-        if root is not None:
-            return self.driver_adapter.is_element_displayed(strategy, locator, root=root)
         return self.driver_adapter.is_element_displayed(strategy, locator)
