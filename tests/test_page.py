@@ -183,10 +183,14 @@ def test_is_element_displayed_splinter(page, selenium, driver_interface, splinte
     skip_not_splinter(driver_interface)
 
     locator = (splinter_strategy, str(random.random()))
-    page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): True})
+
+    from mock import PropertyMock
+    visible_mock = PropertyMock(return_value=True)
+    page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible'.format(splinter_strategy): visible_mock})
+    type(getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).return_value.first).visible = visible_mock
     assert page.is_element_displayed(*locator)
     getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
-    getattr(page.driver, 'find_by_{0}'.format(splinter_strategy))().first.visible.assert_called_with()
+    visible_mock.assert_called_with()
 
 
 def test_is_element_displayed_not_present_selenium(page, selenium, driver_interface):
@@ -225,7 +229,11 @@ def test_is_element_displayed_not_displayed_splinter(page, selenium, driver_inte
     skip_not_splinter(driver_interface)
 
     locator = (splinter_strategy, str(random.random()))
-    page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): False})
+
+    from mock import PropertyMock
+    visible_mock = PropertyMock(return_value=False)
+    page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible'.format(splinter_strategy): visible_mock})
+    type(getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).return_value.first).visible = visible_mock
     assert not page.is_element_displayed(*locator)
     getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
-    getattr(page.driver, 'find_by_{0}'.format(splinter_strategy))().first.visible.assert_called_with()
+    visible_mock.assert_called_with()

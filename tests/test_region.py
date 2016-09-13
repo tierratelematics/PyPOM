@@ -111,11 +111,16 @@ class TestNoRootSplinter:
     def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
-        page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): True})
         locator = (splinter_strategy, str(random.random()))
+
+        from mock import PropertyMock
+        visible_mock = PropertyMock(return_value=True)
+        page.driver.configure_mock(**{'find_by_{0}.return_value.first.visible'.format(splinter_strategy): visible_mock})
+        type(getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).return_value.first).visible = visible_mock
         assert Region(page).is_element_displayed(*locator)
 
         getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
+        visible_mock.assert_called_with()
 
     def test_is_element_displayed_not_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
@@ -271,7 +276,7 @@ class TestRootElementSplinter:
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
-        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): True})
+        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible'.format(splinter_strategy): True})
         locator = (splinter_strategy, str(random.random()))
         region = Region(page, root=root_element)
         assert region.is_element_displayed(*locator)
@@ -291,7 +296,7 @@ class TestRootElementSplinter:
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
-        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible.return_value'.format(splinter_strategy): False})
+        root_element.configure_mock(**{'find_by_{0}.return_value.first.visible'.format(splinter_strategy): False})
         locator = (splinter_strategy, str(random.random()))
         region = Region(page, root=root_element)
         assert not region.is_element_displayed(*locator)
@@ -427,7 +432,7 @@ class TestRootLocatorSplinter:
 
         locator = (splinter_strategy, str(random.random()))
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=MagicMock()) as mock_find_element:
-            mock_find_element.return_value.first.visible.return_value = True
+            mock_find_element.return_value.first.visible = True
             assert region.is_element_displayed(*locator)
 
     def test_is_element_displayed_not_present_splinter(self, region, driver_interface, splinter_strategy):
@@ -444,7 +449,7 @@ class TestRootLocatorSplinter:
 
         locator = (splinter_strategy, str(random.random()))
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
-            visible_mock = Mock().visible.return_value = False
+            visible_mock = Mock().visible = False
             first_mock = Mock().first.return_value = visible_mock
             mock_find_element.return_value = first_mock
             assert not region.is_element_displayed(*locator)
