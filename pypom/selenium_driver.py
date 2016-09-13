@@ -29,13 +29,17 @@ class Selenium(object):
     def __init__(self, driver):
         self.driver = driver
 
-    def wait_factory(self, timeout):
+    def wait_factory(self, timeout, poll_frequency=0.5, ignored_exceptions=None):
         """Returns a WebDriverWait like property for a given timeout.
 
         :param timeout: Timeout used by WebDriverWait like calls
+        :param poll_frequency: Poll frequency
+        :param ignored_exceptions: Ignored exceptions by WebDriverWait
         :type timeout: int
+        :type poll_frequency: float
+        :type ignored_exceptions: list
         """
-        return WebDriverWait(self.driver, timeout)
+        return WebDriverWait(self.driver, timeout, poll_frequency=poll_frequency, ignored_exceptions=ignored_exceptions)
 
     def open(self, url):
         """Open the page.

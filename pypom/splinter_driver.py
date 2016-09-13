@@ -14,6 +14,7 @@ from splinter.driver.webdriver.chrome import WebDriver as ChromeWebDriver
 from splinter.driver.webdriver.phantomjs import WebDriver as PhantomJSWebDriver
 from .interfaces import IDriver
 from .driver import registerDriver
+from .selenium_driver import Selenium
 from .exception import UsageError
 
 ALLOWED_STRATEGIES = {
@@ -32,18 +33,10 @@ class ISplinter(Interface):
 
 
 @implementer(IDriver)
-class Splinter(object):
+class Splinter(Selenium):
 
     def __init__(self, driver):
         self.driver = driver
-
-    def wait_factory(self, timeout):
-        """Returns a WebDriverWait like property for a given timeout.
-
-        :param timeout: Timeout used by WebDriverWait like calls
-        :type timeout: int
-        """
-        return self.driver.wait_for_condition
 
     def open(self, url):
         """Open the page.
