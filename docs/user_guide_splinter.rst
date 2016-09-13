@@ -273,7 +273,7 @@ box that causes a button to become enabled::
       def accept_privacy_policy(self):
           self.find_element(*self._privacy_policy_locator).click()
           sign_me_up = self.find_element(*self._sign_me_up_locator).first
-          self.wait.until(lambda s: sign_me_up.is_enabled())
+          self.wait.until(lambda s: sign_me_up.has_class('enabled'))
 
 You can either specify a timeout by passing the optional ``timeout`` keyword
 argument when instantiating a page object, or you can override the
