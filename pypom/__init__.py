@@ -1,13 +1,11 @@
 from .page import Page  # noqa
 from .region import Region  # noqa
 
-try:
-    import selenium  # noqa
-except ImportError:  # pragma: no cover
-    pass             # pragma: no cover
-else:
-    from .selenium_driver import register as registerSelenium
-    registerSelenium()
+import selenium  # noqa
+
+# register selenium support
+from .selenium_driver import register as registerSelenium
+registerSelenium()
 
 try:
     import splinter  # noqa
