@@ -70,10 +70,7 @@ class Splinter(Selenium):
         :rtype: :py:class:`splinter.element_list.ElementList`
 
         """
-        if root is not None:
-            node = root
-        else:
-            node = self.driver
+        node = root or self.driver
 
         if strategy in ALLOWED_STRATEGIES:
             return getattr(node, 'find_by_' + strategy)(locator)
