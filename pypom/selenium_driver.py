@@ -32,7 +32,7 @@ class Selenium(object):
     def wait_factory(self, timeout, poll_frequency=0.5, ignored_exceptions=None):
         """Returns a WebDriverWait like property for a given timeout.
 
-        :param timeout: Timeout used by WebDriverWait like calls
+        :param timeout: Timeout used by WebDriverWait calls
         :param poll_frequency: Poll frequency
         :param ignored_exceptions: Ignored exceptions by WebDriverWait
         :type timeout: int

@@ -48,14 +48,12 @@ class Splinter(Selenium):
     def find_element(self, strategy, locator, root=None):
         """Finds an element on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use. See pypom.splinter_driver.ALLOWED_STRATEGIES for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
-        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
-        :rtype: selenium.webdriver.remote.webelement.WebElement
+        :return: :py:class:`~splinter.driver.webdriver.WebDriverElement`.
+        :rtype: splinter.driver.webdriver.WebDriverElement
 
         """
         elements = self.find_elements(strategy, locator, root=root)
@@ -64,14 +62,12 @@ class Splinter(Selenium):
     def find_elements(self, strategy, locator, root=None):
         """Finds elements on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use. See pypom.splinter_driver.ALLOWED_STRATEGIES for valid values.
         :param locator: Location of target elements.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
-        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
-        :rtype: list
+        :return: List of :py:class:`~splinter.driver.webdriver.WebDriverElement`
+        :rtype: :py:class:`splinter.element_list.ElementList`
 
         """
         if root is not None:
@@ -87,12 +83,10 @@ class Splinter(Selenium):
     def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use. See pypom.splinter_driver.ALLOWED_STRATEGIES for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
 
@@ -102,12 +96,10 @@ class Splinter(Selenium):
     def is_element_displayed(self, strategy, locator, root=None):
         """Checks whether an element is displayed.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use. See pypom.splinter_driver.ALLOWED_STRATEGIES for valid values.
         :param locator: Location of target element.
-        :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
 

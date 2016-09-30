@@ -27,55 +27,51 @@ class IDriver(Interface):
     def find_element(strategy, locator, root=None):
         """Finds an element on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use (type depends on the driver implementation)
         :param locator: Location of target element.
         :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
-        :return: :py:class:`~selenium.webdriver.remote.webelement.WebElement` object.
-        :rtype: selenium.webdriver.remote.webelement.WebElement
-
+        :type root: web element object or None.
+        :return: web element object
+        :rtype: it depends on the driver implementation
         """
 
     def find_elements(strategy, locator, root=None):
         """Finds elements on the page.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use (type depends on the driver implementation)
         :param locator: Location of target elements.
         :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
-        :return: List of :py:class:`~selenium.webdriver.remote.webelement.WebElement` objects.
-        :rtype: list
-
+        :type root: web element object or None.
+        :return: iterable of web element objects
+        :rtype: iterable (if depends on the driver implementation)
         """
 
     def is_element_present(strategy, locator, root=None):
         """Checks whether an element is present.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use (type depends on the driver implementation)
         :param locator: Location of target element.
         :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
+        :type root: web element object or None.
         :return: ``True`` if element is present, else ``False``.
         :rtype: bool
-
         """
 
     def is_element_displayed(strategy, locator, root=None):
         """Checks whether an element is displayed.
 
-        :param strategy: Location strategy to use. See :py:class:`~selenium.webdriver.common.by.By` for valid values.
+        :param strategy: Location strategy to use (type depends on the driver implementation)
         :param locator: Location of target element.
         :param root: (optional) root node.
         :type strategy: str
         :type locator: str
-        :type root: str :py:class:`~selenium.webdriver.remote.webelement.WebElement` object or None.
+        :type root: web element object or None.
         :return: ``True`` if element is displayed, else ``False``.
         :rtype: bool
-
         """
