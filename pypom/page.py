@@ -22,7 +22,7 @@ class Page(WebView):
     :param base_url: (optional) Base URL.
     :param timeout: (optional) Timeout used for explicit waits. Defaults to ``10``.
     :param url_kwargs: (optional) Keyword arguments used when formatting the :py:attr:`seed_url`.
-    :type selenium: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or any other supported driver
+    :type driver: :py:class:`~selenium.webdriver.remote.webdriver.WebDriver` or other supported drivers http://splinter.readthedocs.io/en/latest/index.html#drivers
     :type base_url: str
     :type timeout: int
 
