@@ -237,3 +237,9 @@ def test_is_element_displayed_not_displayed_splinter(page, selenium, driver_inte
     assert not page.is_element_displayed(*locator)
     getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
     visible_mock.assert_called_with()
+
+
+def test_bwc_selenium(page, selenium, driver_interface):
+    """ Backwards compatibility with old selenium attribute """
+    driver = page.selenium
+    assert driver == page.driver

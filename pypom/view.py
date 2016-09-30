@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from warnings import warn
+
 from .interfaces import IDriver
 
 
@@ -12,6 +14,12 @@ class WebView(object):
         self.driver_adapter = IDriver(driver)
         self.timeout = timeout
         self.wait = self.driver_adapter.wait_factory(self.timeout)
+
+    @property
+    def selenium(self):
+        """ Backwards compatibility attribute """
+        warn("selenium attribute deprecated. Use driver instead")
+        return self.driver
 
     def find_element(self, strategy, locator):
         return self.driver_adapter.find_element(strategy, locator)
