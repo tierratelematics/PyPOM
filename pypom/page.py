@@ -18,7 +18,7 @@ class Page(WebView):
 
     Used as a base class for your project's page objects.
 
-    :param selenium: WebDriver like object.
+    :param driver: WebDriver like object.
     :param base_url: (optional) Base URL.
     :param timeout: (optional) Timeout used for explicit waits. Defaults to ``10``.
     :param url_kwargs: (optional) Keyword arguments used when formatting the :py:attr:`seed_url`.
