@@ -77,8 +77,7 @@ class Splinter(Selenium):
 
         if strategy in ALLOWED_STRATEGIES:
             return getattr(node, 'find_by_' + strategy)(locator)
-        else:
-            raise UsageError('Strategy not allowed')
+        raise UsageError('Strategy not allowed')
 
     def is_element_present(self, strategy, locator, root=None):
         """Checks whether an element is present.
