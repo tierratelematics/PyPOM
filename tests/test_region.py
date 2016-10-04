@@ -38,51 +38,51 @@ class TestNoRoot:
     def test_root(self, page):
         assert Region(page).root is None
 
-    def test_find_element_selenium(self, page, selenium, driver_interface):
+    def test_find_element_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         Region(page).find_element(*locator)
-        selenium.find_element.assert_called_once_with(*locator)
+        driver.find_element.assert_called_once_with(*locator)
 
-    def test_find_elements_selenium(self, page, selenium, driver_interface):
+    def test_find_elements_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         Region(page).find_elements(*locator)
-        selenium.find_elements.assert_called_once_with(*locator)
+        driver.find_elements.assert_called_once_with(*locator)
 
-    def test_is_element_displayed_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         assert Region(page).is_element_displayed(*locator)
-        selenium.find_element.assert_called_once_with(*locator)
+        driver.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_displayed_not_present_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_not_present_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
-        selenium.find_element.side_effect = NoSuchElementException()
+        driver.find_element.side_effect = NoSuchElementException()
         assert not Region(page).is_element_displayed(*locator)
-        selenium.find_element.assert_called_once_with(*locator)
-        selenium.find_element.is_displayed.assert_not_called()
+        driver.find_element.assert_called_once_with(*locator)
+        driver.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_hidden_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_hidden_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
-        hidden_element = selenium.find_element()
+        hidden_element = driver.find_element()
         hidden_element.is_displayed.return_value = False
         assert not Region(page).is_element_displayed(*locator)
-        selenium.find_element.assert_called_with(*locator)
+        driver.find_element.assert_called_with(*locator)
         hidden_element.is_displayed.assert_called_once_with()
 
 
 class TestNoRootSplinter:
 
-    def test_no_root_usage_error(self, page, selenium, driver_interface):
+    def test_no_root_usage_error(self, page, driver, driver_interface):
         skip_not_splinter(driver_interface)
 
         locator = ('not_valid_strategy', str(random.random()))
@@ -90,7 +90,7 @@ class TestNoRootSplinter:
         with pytest.raises(UsageError):
             Region(page).find_element(*locator)
 
-    def test_find_element_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_find_element_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
@@ -99,7 +99,7 @@ class TestNoRootSplinter:
         Region(page).find_element(*locator)
         getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_find_elements_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_find_elements_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
@@ -108,7 +108,7 @@ class TestNoRootSplinter:
         Region(page).find_elements(*locator)
         getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
@@ -122,7 +122,7 @@ class TestNoRootSplinter:
         getattr(page.driver, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
         visible_mock.assert_called_with()
 
-    def test_is_element_displayed_not_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_not_present_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
@@ -131,11 +131,11 @@ class TestNoRootSplinter:
             mock_find_element.return_value = ElementList([])
             assert not Region(page).is_element_displayed(*locator)
 
-    def test_is_element_displayed_hidden_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_hidden_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         locator = (splinter_strategy, str(random.random()))
-        hidden_element = selenium.find_element()
+        hidden_element = driver.find_element()
         hidden_element.is_displayed.return_value = False
         region = Region(page)
         with patch('pypom.splinter_driver.Splinter.find_element', new_callable=Mock()) as mock_find_element:
@@ -147,38 +147,38 @@ class TestNoRootSplinter:
 
 class TestRootElement:
 
-    def test_root(self, page, selenium):
+    def test_root(self, page, driver):
         element = Mock()
         assert Region(page, root=element).root == element
 
-    def test_find_element_selenium(self, page, selenium, driver_interface):
+    def test_find_element_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         Region(page, root=root_element).find_element(*locator)
         root_element.find_element.assert_called_once_with(*locator)
-        selenium.find_element.assert_not_called()
+        driver.find_element.assert_not_called()
 
-    def test_find_elements_selenium(self, page, selenium, driver_interface):
+    def test_find_elements_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         Region(page, root=root_element).find_elements(*locator)
         root_element.find_elements.assert_called_once_with(*locator)
-        selenium.find_elements.assert_not_called()
+        driver.find_elements.assert_not_called()
 
-    def test_is_element_present_selenium(self, page, selenium, driver_interface):
+    def test_is_element_present_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         assert Region(page, root=root_element).is_element_present(*locator)
         root_element.find_element.assert_called_once_with(*locator)
-        selenium.find_element.assert_not_called()
+        driver.find_element.assert_not_called()
 
-    def test_is_element_present_not_preset_selenium(self, page, selenium, driver_interface):
+    def test_is_element_present_not_preset_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
@@ -187,18 +187,18 @@ class TestRootElement:
         root_element.find_element.side_effect = NoSuchElementException()
         assert not Region(page, root=root_element).is_element_present(*locator)
         root_element.find_element.assert_called_once_with(*locator)
-        selenium.find_element.assert_not_called()
+        driver.find_element.assert_not_called()
 
-    def test_is_element_displayed_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
         locator = (str(random.random()), str(random.random()))
         assert Region(page, root=root_element).is_element_displayed(*locator)
         root_element.find_element.assert_called_once_with(*locator)
-        selenium.find_element.assert_not_called()
+        driver.find_element.assert_not_called()
 
-    def test_is_element_displayed_not_present_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_not_present_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
@@ -210,7 +210,7 @@ class TestRootElement:
         root_element.find_element.assert_called_once_with(*locator)
         root_element.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_hidden_selenium(self, page, selenium, driver_interface):
+    def test_is_element_displayed_hidden_selenium(self, page, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         root_element = Mock()
@@ -225,7 +225,7 @@ class TestRootElement:
 
 class TestRootElementSplinter:
 
-    def test_no_root_usage_error(self, page, selenium, driver_interface):
+    def test_no_root_usage_error(self, page, driver, driver_interface):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -234,7 +234,7 @@ class TestRootElementSplinter:
         with pytest.raises(UsageError):
             Region(page, root=root_element).find_element(*locator)
 
-    def test_find_element_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_find_element_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -243,7 +243,7 @@ class TestRootElementSplinter:
         Region(page, root=root_element).find_element(*locator)
         getattr(root_element, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_find_elements_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_find_elements_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -252,7 +252,7 @@ class TestRootElementSplinter:
         Region(page, root=root_element).find_elements(*locator)
         getattr(root_element, 'find_by_{0}'.format(splinter_strategy)).assert_called_once_with(locator[1])
 
-    def test_is_element_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_present_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = Mock()
@@ -263,7 +263,7 @@ class TestRootElementSplinter:
             assert Region(page, root=root_element).is_element_present(*locator)
             mock_find_element.assert_called_once_with(*locator, root=root_element)
 
-    def test_is_element_present_not_preset_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_present_not_preset_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -272,7 +272,7 @@ class TestRootElementSplinter:
         locator = (splinter_strategy, str(random.random()))
         assert not Region(page, root=root_element).is_element_present(*locator)
 
-    def test_is_element_displayed_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -281,7 +281,7 @@ class TestRootElementSplinter:
         region = Region(page, root=root_element)
         assert region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_not_present_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_not_present_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = Mock()
@@ -292,7 +292,7 @@ class TestRootElementSplinter:
             mock_find_element.return_value = ElementList([])
             assert not region.is_element_displayed(*locator)
 
-    def test_is_element_displayed_hidden_splinter(self, page, selenium, driver_interface, splinter_strategy):
+    def test_is_element_displayed_hidden_splinter(self, page, driver, driver_interface, splinter_strategy):
         skip_not_splinter(driver_interface)
 
         root_element = MagicMock()
@@ -310,55 +310,55 @@ class TestRootLocator:
             _root_locator = (str(random.random()), str(random.random()))
         return MyRegion(page)
 
-    def test_root_selenium(self, element, region, selenium, driver_interface):
+    def test_root_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         assert element == region.root
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
 
-    def test_find_element_selenium(self, element, region, selenium, driver_interface):
+    def test_find_element_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         region.find_element(*locator)
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_find_elements_selenium(self, element, region, selenium, driver_interface):
+    def test_find_elements_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         region.find_elements(*locator)
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
         element.find_elements.assert_called_once_with(*locator)
 
-    def test_is_element_present_selenium(self, element, region, selenium, driver_interface):
+    def test_is_element_present_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         assert region.is_element_present(*locator)
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_present_not_present_selenium(self, element, region, selenium, driver_interface):
+    def test_is_element_present_not_present_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         from selenium.common.exceptions import NoSuchElementException
         element.find_element.side_effect = NoSuchElementException()
         assert not region.is_element_present(*locator)
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_displayed_selenium(self, element, region, selenium, driver_interface):
+    def test_is_element_displayed_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
         assert region.is_element_displayed(*locator)
-        selenium.find_element.assert_called_once_with(*region._root_locator)
+        driver.find_element.assert_called_once_with(*region._root_locator)
         element.find_element.assert_called_once_with(*locator)
 
-    def test_is_element_displayed_not_present_selenium(self, element, region, selenium, driver_interface):
+    def test_is_element_displayed_not_present_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))
@@ -368,7 +368,7 @@ class TestRootLocator:
         element.find_element.assert_called_once_with(*locator)
         element.find_element.is_displayed.assert_not_called()
 
-    def test_is_element_displayed_hidden_selenium(self, element, region, selenium, driver_interface):
+    def test_is_element_displayed_hidden_selenium(self, element, region, driver, driver_interface):
         skip_not_selenium(driver_interface)
 
         locator = (str(random.random()), str(random.random()))

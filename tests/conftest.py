@@ -18,16 +18,16 @@ def base_url():
 
 
 @pytest.fixture
-def element(selenium):
+def element(driver):
     element = Mock()
-    selenium.find_element.return_value = element
+    driver.find_element.return_value = element
     return element
 
 
 @pytest.fixture
-def page(selenium, base_url):
+def page(driver, base_url):
     from pypom import Page
-    return Page(selenium, base_url)
+    return Page(driver, base_url)
 
 
 @pytest.fixture(params=[ISelenium, ISplinter])
@@ -36,7 +36,7 @@ def driver_interface(request):
 
 
 @pytest.fixture
-def selenium(request, driver_interface):
+def driver(request, driver_interface):
     mock = Mock()
     alsoProvides(mock, driver_interface)
     return mock
