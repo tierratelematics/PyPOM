@@ -37,6 +37,7 @@ def driver_interface(request):
 
 @pytest.fixture
 def driver(request, driver_interface):
+    """ All drivers """
     mock = Mock()
     alsoProvides(mock, driver_interface)
     return mock
