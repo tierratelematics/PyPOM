@@ -11,8 +11,17 @@ from zope.interface import (
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import (
-    Remote,
+    Firefox,
+    FirefoxProfile,
+    Chrome,
+    Ie,
+    Edge,
     Opera,
+    Safari,
+    BlackBerry,
+    PhantomJS,
+    Android,
+    Remote,
 )
 
 from .interfaces import IDriver
@@ -128,6 +137,15 @@ def register():
         ISelenium,
         Selenium,
         class_implements=[
-            Remote,
+            Firefox,
+            FirefoxProfile,
+            Chrome,
+            Ie,
+            Edge,
             Opera,
+            Safari,
+            BlackBerry,
+            PhantomJS,
+            Android,
+            Remote,
         ])
