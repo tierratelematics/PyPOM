@@ -17,8 +17,7 @@ Contributions are welcome. Feel free to fork_ and contribute!
    :maxdepth: 2
 
    installing
-   user_guide_selenium
-   user_guide_splinter
+   user_guide
    api
    development
    news
